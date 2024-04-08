@@ -10,12 +10,11 @@ RUN set -x && \
     make
 
 FROM base as builder
-ARG ARCH="amd64"
+ARG ARCH
 ARG SRC=github.com/kubernetes/autoscaler
 ARG PKG=github.com/kubernetes/autoscaler
 RUN git clone https://${SRC}.git $GOPATH/src/${PKG}
 ARG TAG=1.8.20
-ARG ARCH
 WORKDIR $GOPATH/src/${PKG}/addon-resizer
 RUN git branch -a
 RUN git checkout addon-resizer-${TAG} -b ${TAG}
