@@ -1,13 +1,13 @@
 on:
   release:
-    types: [published]
-
-permissions:
-  id-token: write
-  contents: read  
+    types: [published] 
 
 jobs:
   push-multiarch:
+    permissions:
+      contents: read
+      id-token: write
+
     runs-on: ubuntu-latest
     steps:
     - name: Check out code
@@ -23,8 +23,8 @@ jobs:
       uses: rancher-eio/read-vault-secrets@main
       with:
         secrets: |
-          secret/data/github/repo/${{ github.repository }}/dockerhub/credentials username | DOCKER_USERNAME ;
-          secret/data/github/repo/${{ github.repository }}/dockerhub/credentials password | DOCKER_PASSWORD
+          secret/data/github/repo/${{ github.repository }}/dockerhub/${{ github.repository_owner }}/credentials username | DOCKER_USERNAME ;
+          secret/data/github/repo/${{ github.repository }}/dockerhub/${{ github.repository_owner }}/credentials password | DOCKER_PASSWORD
 
     - name: Login to Container Registry
       uses: docker/login-action@v3
