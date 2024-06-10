@@ -14,28 +14,30 @@ BUILD_META=-build$(shell date +%Y%m%d)
 ORG ?= rancher
 PKG ?= github.com/kubernetes/autoscaler
 SRC ?= github.com/kubernetes/autoscaler
-TAG ?= 1.8.20$(BUILD_META)
+TAG ?= ${GITHUB_ACTION_TAG}
+export DOCKER_BUILDKIT?=1
 
-ifeq (,$(filter %$(BUILD_META),$(TAG)))
-$(error TAG ${TAG} needs to end with build metadata: $(BUILD_META))
+ifeq ($(TAG),)
+TAG := 1.8.20$(BUILD_META)
 endif
 
 .PHONY: image-build
 image-build:
-	docker build \
-		--pull \
+	docker buildx build \
+		--platform=$(ARCH) \
 		--build-arg ARCH=$(ARCH) \
 		--build-arg PKG=$(PKG) \
 		--build-arg SRC=$(SRC) \
 		--build-arg TAG=$(TAG:$(BUILD_META)=) \
 		--tag $(ORG)/hardened-addon-resizer:$(TAG) \
 		--tag $(ORG)/hardened-addon-resizer:$(TAG)-$(ARCH) \
+		--load \
 		.
 
 .PHONY: log
 log:
 	@echo "ARCH=$(ARCH)"
-	@echo "TAG=$(TAG)"
+	@echo "TAG=$(TAG:$(BUILD_META)=)"
 	@echo "ORG=$(ORG)"
 	@echo "PKG=$(PKG)"
 	@echo "SRC=$(SRC)"
