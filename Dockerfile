@@ -10,7 +10,7 @@ RUN set -x && \
     make
 
 FROM base as builder
-ARG ARCH
+ARG TARGETARCH
 ARG SRC=github.com/kubernetes/autoscaler
 ARG PKG=github.com/kubernetes/autoscaler
 RUN git clone https://${SRC}.git $GOPATH/src/${PKG}
@@ -19,10 +19,10 @@ WORKDIR $GOPATH/src/${PKG}/addon-resizer
 RUN git branch -a
 RUN git checkout addon-resizer-${TAG} -b ${TAG}
 RUN ls
-RUN GOARCH=${ARCH} GO_LDFLAGS="-linkmode=external -X ${PKG}/pkg/version.VERSION=${TAG}" \
+RUN GOARCH=${TARGETARCH} GO_LDFLAGS="-linkmode=external -X ${PKG}/pkg/version.VERSION=${TAG}" \
     go-build-static.sh -gcflags=-trimpath=${GOPATH}/src -o pod_nanny nanny/main/pod_nanny.go
 RUN go-assert-static.sh pod_nanny
-RUN if [ "${ARCH}" = "amd64" ]; then \
+RUN if [ "${TARGETARCH}" = "amd64" ]; then \
         go-assert-boring.sh pod_nanny; \
     fi
 RUN install -s pod_nanny /usr/local/bin
