@@ -47,6 +47,10 @@ push-image:
 		--push \
 		.
 
+.PHONY: image-scan
+image-scan:
+	trivy --severity $(SEVERITIES) --no-progress --ignore-unfixed image $(IMAGE)
+
 .PHONY: log
 log:
 	@echo "TAG=$(TAG:$(BUILD_META)=)"
