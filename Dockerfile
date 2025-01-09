@@ -1,15 +1,13 @@
-#ARG BCI_IMAGE=registry.suse.com/bci/bci-busybox
 ARG GO_IMAGE=rancher/hardened-build-base:v1.22.7b1
 
-#FROM ${BCI_IMAGE} as bci
-FROM ${GO_IMAGE} as base
+FROM ${GO_IMAGE} AS base
 
 RUN set -x && \
     apk --no-cache add \
     git \
     make
 
-FROM base as builder
+FROM base AS builder
 ARG TARGETARCH
 ARG SRC=github.com/kubernetes/autoscaler
 ARG PKG=github.com/kubernetes/autoscaler
