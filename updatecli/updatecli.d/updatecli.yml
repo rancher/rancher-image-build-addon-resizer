@@ -28,7 +28,7 @@ scms:
       token: '{{ requiredEnv .github.token }}'
       owner: golang
       repository: go
-      branch: master
+      branch: main
 
 sources:
   # validate gittag parsing external public repos
