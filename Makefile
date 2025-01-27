@@ -13,7 +13,7 @@ endif
 
 BUILD_META=-build$(shell date +%Y%m%d)
 PKG ?= github.com/kubernetes/autoscaler
-SRC ?= github.com/kubernetes/autoscaler
+SRC ?= github.com/rancher/release-autoscaler
 TAG ?= ${GITHUB_ACTION_TAG}
 export DOCKER_BUILDKIT?=1
 
@@ -28,7 +28,7 @@ BUILD_OPTS = \
 	--build-arg PKG=$(PKG) \
 	--build-arg SRC=$(SRC) \
 	--build-arg TAG=$(TAG:$(BUILD_META)=) \
-	--tag "$(IMAGE)"
+	--tag "$(IMAGE)-exp1"
 
 .PHONY: image-build
 image-build:
